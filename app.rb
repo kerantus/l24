@@ -24,18 +24,18 @@ post '/writeof' do
   @title = 'Thank you'
   @message = "#{@user_name}, вы записаны к #{@user_master} на #{@user_time}"
 
+
+
   hh = {
         :user_name => 'Введите имя',
         :user_phone => 'Введите телефон',
         :user_time => 'Введите время'
   }
-
-  hh.each do |key, value|
-        if params[key] == ""
-          @error = hh[key].to_s
+  @error = hh.select {|key,_| params[key] == ""}.values.join("</br>")
+         if @error != ""
           return erb :visit
         end
-  end
+
 
   f = File.open "./public/users.txt", "a"
   f.write "\n #{@user_master} \n #{@user_time} -- #{@user_phone} -- #{@user_name} -- #{@user_color} \n"
