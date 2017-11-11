@@ -35,7 +35,6 @@ post '/writeof' do
           @error = hh[key].to_s
           return erb :visit
         end
-
   end
 
   f = File.open "./public/users.txt", "a"

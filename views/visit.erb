@@ -6,17 +6,17 @@
   #имя
   <div class="form-group">
     <label>Ваше ФИО</label>
-    <input name="user_name" type="text" class="form-control" placeholder="ФИО">
+    <input name="user_name" type="text" class="form-control" placeholder="ФИО" value="<%= @user_name %>">
   </div>
   #телефон
   <div class="form-group">
     <label>Ваш телефон</label>
-    <input type="text" class="form-control" name="user_phone" placeholder="Ваш телефон">
+    <input type="text" class="form-control" name="user_phone" placeholder="Ваш телефон" value="<%= @user_phone %>">
   </div>
   #время
   <div class="form-group">
     <label>Время посищения салона</label>
-    <input type="datetime" class="form-control" name="user_time" placeholder="Время посещения">
+    <input type="datetime" class="form-control" name="user_time" placeholder="Время посещения" value="<%= @user_time %>">
   </div>
   </br>
   #выбрать мастера
