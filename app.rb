@@ -23,20 +23,15 @@ post '/writeof' do
   @user_color = params[:color]
   @title = 'Thank you'
   @message = "#{@user_name}, вы записаны к #{@user_master} на #{@user_time}"
-
-
-
   hh = {
-        :user_name => 'Введите имя',
-        :user_phone => 'Введите телефон',
-        :user_time => 'Введите время'
+      :user_name => 'Введите имя',
+      :user_phone => 'Введите телефон',
+      :user_time => 'Введите время'
   }
-  @error = hh.select {|key,_| params[key] == ""}.values.join("</br>")
-         if @error != ""
-          return erb :visit
-        end
-
-
+  @error = hh.select { |key, _| params[key] == "" }.values.join("</br>")
+  if @error != ""
+    return erb :visit
+  end
   f = File.open "./public/users.txt", "a"
   f.write "\n #{@user_master} \n #{@user_time} -- #{@user_phone} -- #{@user_name} -- #{@user_color} \n"
   f.close
@@ -49,13 +44,43 @@ get '/contacts' do
 end
 
 post '/contacts' do
+  require "pony"
   @user_email = params[:user_email]
   @user_message = params[:user_message]
-  @title = 'Thank you'
-  f = File.open "./public/contacts.txt", "a"
-  f.write "\n #{@user_email} \n #{@user_message} \n =============================================================== \n"
-  f.close
-  erb :contacts
+  my_mail = "kegz@mail.ru"
+  password ="dshjljr" #неотображать вводимые символы
+  sent_to = "kegz@mail.ru"
+  message = @user_email + "\n \n" + @user_message
+  begin #обработка ошибок
+
+    Pony.mail(
+        {
+            :subject => "С сайта BARBERSHOP",
+            :body => message,
+            :to => sent_to,
+            :from => my_mail,
+
+            :via => :smtp,
+            :via_options => {
+                :address => 'smtp.mail.ru',
+                :port => '465',
+                :tls => true,
+                :user_name => my_mail,
+                :password => password,
+                :authentication => :plain
+            }
+        }
+    )
+    @message = "Успешно отправлено"
+  rescue Net::SMTPAuthenticationError => error
+    @message = " Ошибка аутентификации " + error.message.to_s
+  rescue Net::SMTPFatalError => error
+    @message = " Проверьте данные адресата " + error.message
+      # puts "Не удалось отправить письмо"
+  ensure
+    #puts "Попытка отправки письма закончена"
+  end #обработка ошибок
+  erb :message
 end
 
 
