@@ -4,10 +4,10 @@ require 'sinatra'
 require 'sinatra/reloader'
 
 get '/' do
-	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School!!!!!!!!!!!!!!</a>"
+  erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School!!!!!!!!!!!!!!</a>"
 end
 get '/about' do
-  @error = "Somethink!!!!!!"
+  @error
   erb :about
 end
 
@@ -24,10 +24,19 @@ post '/writeof' do
   @title = 'Thank you'
   @message = "#{@user_name}, вы записаны к #{@user_master} на #{@user_time}"
 
-    if @user_name == ""
-      @error = 'Ведите имя'
-      return erb :visit
-    end
+  hh = {
+        :user_name => 'Введите имя',
+        :user_phone => 'Введите телефон',
+        :user_time => 'Введите время'
+  }
+
+  hh.each do |key, value|
+        if params[key] == ""
+          @error = hh[key].to_s
+          return erb :visit
+        end
+
+  end
 
   f = File.open "./public/users.txt", "a"
   f.write "\n #{@user_master} \n #{@user_time} -- #{@user_phone} -- #{@user_name} -- #{@user_color} \n"
@@ -36,10 +45,8 @@ post '/writeof' do
 end
 
 
-
-
 get '/contacts' do
-	erb :contacts
+  erb :contacts
 end
 
 post '/contacts' do
